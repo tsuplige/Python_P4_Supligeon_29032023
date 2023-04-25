@@ -16,10 +16,11 @@ class Player:
         self.birth_date = birth_date
         self.point = point
         self.nationnal_chess_id = nationnal_chess_id
+
     def add_point(self, victoire):
-        if victoire == "v":
+        if victoire == "1":
             self.point += 1
-        elif victoire == "e":
+        elif victoire == "2":
             self.point += 0.5
-        elif victoire == "d":
+        elif victoire == "3":
             pass

@@ -29,7 +29,7 @@ class Round:
 
             return current_date.strftime("%Y-%m-%d %H:%M")
     
-    def end_round(self):
+    def add_end_round_date(self):
          """
 
          definit l'heure de fin du Tour

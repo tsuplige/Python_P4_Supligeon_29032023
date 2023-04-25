@@ -51,10 +51,14 @@ class Tournament:
 
         self.round_list.append(Round(self.current_round, match_list))
 
+
+    def end_round(self):
+         self.round_list[self.current_round - 1].add_end_round_date()
+
     def print_match_list(self, match_list):
          
          for match in match_list:
-              print
+            print
 
     def sort_by_point(self):
         """

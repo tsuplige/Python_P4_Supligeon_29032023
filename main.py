@@ -39,6 +39,7 @@ class Controllers:
 
         Méthode main_menu
 
+
         """
 
         menu_input = self.view.main_menu_prompt()
@@ -63,9 +64,17 @@ class Controllers:
 
         while new_tournament.current_round < new_tournament.number_of_round:
             new_tournament.current_round += 1
-            print("\n_________________ "+"round " + str(new_tournament.current_round) + "_________________ \n")
+            self.view.title_prompt("Round " + str(new_tournament.current_round))
             new_tournament.start_round()
-            print("__________________________________________ \n")
+
+            self.view.title_prompt("Resultat")
+            for player in self.players:
+                result = self.view.ask_for_result_prompt(player.first_name, player.last_name)
+                player.add_point(result)
+            
+            new_tournament.end_round()
+
+
 
     def get_players(self):
         """
