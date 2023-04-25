@@ -1,13 +1,18 @@
-
 class Player:
     """
     Class Players.
     
-    has prenom, last name, birth date and cans have national chess id
+     Attb:
+        attribut_1 -- nom
+        attribut_2 -- prenom
+        attribut_3 -- date de naissance
+        attribut_4 -- point
+        attribut_5 -- numero d'identifiant nationnal
+
     """
-    def __init__(self, nom, prenom, birth_date,point = 0, nationnal_chess_id = 0):
-        self.nom = nom
-        self.prenom = prenom
+    def __init__(self, last_name, first_name, birth_date,point = 0, nationnal_chess_id = '0000000'):
+        self.last_name = last_name
+        self.first_name = first_name
         self.birth_date = birth_date
         self.point = point
         self.nationnal_chess_id = nationnal_chess_id
@@ -17,20 +22,4 @@ class Player:
         elif victoire == "e":
             self.point += 0.5
         elif victoire == "d":
-            print("dommage,vous aller y arriver !")
-
-
-    
-# timote = Player("CHALUMO", "TIMOTE", "12021998")
-# bertrand = Player("CELO", "Bertrand", "24041973")
-# lisa = Player("fruit", "Lisa", "24111994")
-
-# Tourprenomnt2023_playerlist = PlayersList([timote, bertrand])
-
-# Tourprenomnt2023_playerlist.add_player(lisa)
-
-# list = []
-# for player in Tourprenomnt2023_playerlist.players:
-#     list.append(vars(player))
-
-# print(list)
+            pass
