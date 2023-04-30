@@ -29,6 +29,7 @@ class Tournament:
         self.description = description
         self.number_of_round = number_of_round
         self.current_round = 0
+        self.is_not_finish = True
 
     def start_round(self):
         """
@@ -44,12 +45,9 @@ class Tournament:
 
         match_list = self.generate_pair()
 
-        for match in match_list:
-            p1 = match[0][0]
-            p2 = match[1][0]
-            print(p1.first_name, p1.last_name, "    vs   ", p2.first_name, p2.last_name, "\n" )
-
         self.round_list.append(Round(self.current_round, match_list))
+
+        return match_list
 
 
     def end_round(self):

@@ -40,30 +40,59 @@ class View:
         return nom, prenom, date_de_naissance
 
     def show_players_list_prompt(self, player_list):
-        
-        print("\n_________________ liste des joueurs _________________\n")
 
         for player in player_list:
+            player.last_name = player.last_name.lower().title()
+
+        self.title_prompt('liste des joueurs')
+        
+        sorted_players = sorted(player_list, key=lambda x: x.last_name)
+
+        for player in sorted_players:
             date_obj = datetime.strptime(player.birth_date, "%d%m%Y")
             date_formatted = date_obj.strftime("%d-%m-%Y")
 
             print("        ", player.first_name, "  |   ", player.last_name, "  |   ", date_formatted)
-            print("_____________________________________________________\n")
+            print("   _____________________________________________________\n")
 
         ask_to_continue = input("\n\nPour revenir au menu principal appuyer sur n'importe quelle touche\n")
 
         return ask_to_continue
     
-    def show_tournaments_list_prompt(self, tournament_list):
+    def tournament_menu_prompt(self, current_round):
+
+        print( self.title_color("Round "+ current_round + " Menu :"))
+
+        start_input = input(self.question_color("\n 1 pour afficher les matchs du Round \n"
+                                                " 2 pour consulter le Classement Actuelle\n"
+                                                " 3 pour Finir le round, Attribuer les Points:\n"))
+        return start_input
+    
+    def print_match(self, match_list, current_round):
         
-        print("\n_________________ liste des joueurs _________________\n")
+        print(self.title_color("\nMatch Round : " + current_round + "\n"))
+        for match in match_list:
+            p1 = match[0][0]
+            p2 = match[1][0]
+            print(p1.first_name, p1.last_name, "    -   ", p2.first_name, p2.last_name, "\n" )
 
-        for tournament in tournament_list:
-            print("_____________________________________________________\n")
 
-        ask_to_continue = input("\n\nPour revenir au menu principal appuyer sur n'importe quelle touche\n")
+    def print_players_list_by_point(self, player_list):
+        for player in player_list:
+            player.last_name = player.last_name.lower().title()
 
-        return ask_to_continue
+        self.title_prompt('Classement1 des joueurs')
+        
+        sorted_players = sorted(player_list, key=lambda x: x.point, reverse=True)
+        i = 0
+        for player in sorted_players:
+            i += 1
+
+            print("        n°", i, player.first_name, "  |   ", player.last_name, "  |   point :", player.point)
+            print("   _____________________________________________________\n")
+
+    def print_players_sorted(self, player_list):
+        pass
 
     def start_tournament_prompt(self):
 
@@ -90,11 +119,12 @@ class View:
         
         return name, locale, tournament_begin_date, tournament_end_date, description
 
-    def ask_for_result_prompt(self, first_name, last_name):
-        print(self.question_color(f"\nVeuillez taper le resultat pour {first_name} {last_name}\n"))
-        result = input(self.exemple_color("1 pour une victoire,\n2 pour une égalité,\n3 pour une defaite : \n"))
+    def ask_for_result_prompt(self, p1_first_name, p1_last_name, p2_first_name, p2_last_name):
+        print(self.question_color(f"\npour le match {p1_first_name} {p1_last_name} - {p2_first_name} {p2_last_name}\n"))
+        result = input(self.exemple_color(f"1 si {p1_first_name} {p1_last_name} à gagner,\n2 si {p2_first_name} {p2_last_name} à gagner,\n3 si il y a eu egalité : \n"))
 
         return result
+    
     def title_prompt(self, title_content):
         print(self.title_color(f"\n______________________{title_content}____________________ \n"))
 
