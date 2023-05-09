@@ -37,17 +37,17 @@ class Controllers:
         if os.path.exists("data/tournament_data.json"):
              with open('data/tournament_data.json', 'r') as f:
                 datas = f.read()
-
-                for data in  json.loads(datas):
-                    load_player_list = []
-                    for player in data["players_list"]:
-                        load_player_list.append(Player(player["last_name"], player["first_name"],  player["birth_date"], player["point"]))
-                    load_tournament = Tournament(data["name"], data["locale"], data["tournament_begin_date"], data["tournament_end_date"], data["description"], load_player_list, data["number_of_round"])
-                    load_tournament.current_round = data["current_round"]
-                    load_tournament.is_not_finish = data["is_not_finish"]
-                    load_tournament.load_round_data(data["round_list"])
-                    self.tournament_list.append(load_tournament)
-                    print(load_tournament.name)
+                if datas:
+                    for data in  json.loads(datas):
+                        load_player_list = []
+                        for player in data["players_list"]:
+                            load_player_list.append(Player(player["last_name"], player["first_name"],  player["birth_date"], player["point"]))
+                        load_tournament = Tournament(data["name"], data["locale"], data["tournament_begin_date"], data["tournament_end_date"], data["description"], load_player_list, data["number_of_round"])
+                        load_tournament.current_round = data["current_round"]
+                        load_tournament.is_not_finish = data["is_not_finish"]
+                        load_tournament.load_round_data(data["round_list"])
+                        self.tournament_list.append(load_tournament)
+                        print(load_tournament.name)
 
     def main_menu(self):
         """
@@ -247,9 +247,9 @@ class Controllers:
         
         input_result = self.view.load_tournament_menu_prompt(self.tournament_list)
 
-        if input_result == 0:
+        if int(input_result) == 0:
             self.main_menu()
-        elif int(input_result) < len(self.tournament_list) or int(input_result) == len(self.tournament_list):
+        elif int(input_result) > 0 and (int(input_result) < len(self.tournament_list) or int(input_result) == len(self.tournament_list)):
             self.load_tounament(self.tournament_list[int(input_result) - 1])
         else:
             self.load_tournament_menu
