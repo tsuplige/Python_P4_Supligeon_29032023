@@ -13,12 +13,14 @@ class Round:
         attribut_5 -- la date et l'heure de fin
 
     """
-    def __init__(self, current_round, match_list):
+    def __init__(self, current_round, match_list, round_begin_date = None, round_end_date = None):
         self.current_round = current_round
         self.round_name = "Round" + str(current_round)
         self.match_list = match_list
-        self.round_begin_date = self.get_actual_date()
-        self.round_end_date = None
+        self.round_begin_date = round_begin_date
+        if self.round_begin_date == None:
+            self.round_begin_date = self.get_actual_date()
+        self.round_end_date = round_end_date
 
     def get_actual_date(self):
             """
@@ -37,6 +39,29 @@ class Round:
          """
          self.round_end_date = self.get_actual_date()
 
+    def save_round_data(self):
+    
+        matchs_datas = []
+
+        for match in self.match_list:
+            print(match[0][0].last_name)
+            matchs_datas.append({
+                 
+                "joueur_1" : match[0][0].save_player_data(),
+                "score_J1" : match[0][1],
+                "joueur_2" : match[1][0].save_player_data(),
+                "score_J2" : match[1][1]
+                                
+                                })
+            
+        round_data = {
+            "round_name" : self.round_name,
+            "current_round" : self.current_round,
+            "match_list" : matchs_datas,
+            "round_begin_date" : self.round_begin_date,
+            "round_end_date" : self.round_end_date
+                       }
+        return round_data
     # def which_player_start(self):
     #      """
 

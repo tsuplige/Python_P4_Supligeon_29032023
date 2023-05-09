@@ -20,7 +20,7 @@ class View:
                                 " Lancer le Tournois, consulter la liste des precedent tournois\n\n"))
 
         start_input = input(self.question_color("que voulez vous faire ?\n1 pour inscrire des joueur \n"
-                                                "2 pour consulter la liste de joueurs\n3 pour lancer le tournois\n4 pour consulter la liste des precedent tournois : \n"))
+                                                "2 pour consulter la liste de joueurs\n3 pour lancer le tournois\n4 Charger les Tournois enregistré : \n"))
         return start_input
        
 
@@ -49,10 +49,9 @@ class View:
         sorted_players = sorted(player_list, key=lambda x: x.last_name)
 
         for player in sorted_players:
-            date_obj = datetime.strptime(player.birth_date, "%d%m%Y")
-            date_formatted = date_obj.strftime("%d-%m-%Y")
+            format_birth_date = self.format_date(player.birth_date)
 
-            print("        ", player.first_name, "  |   ", player.last_name, "  |   ", date_formatted)
+            print("        ", player.first_name, "  |   ", player.last_name, "  |   ", format_birth_date)
             print("   _____________________________________________________\n")
 
         ask_to_continue = input("\n\nPour revenir au menu principal appuyer sur n'importe quelle touche\n")
@@ -65,7 +64,8 @@ class View:
 
         start_input = input(self.question_color("\n 1 pour afficher les matchs du Round \n"
                                                 " 2 pour consulter le Classement Actuelle\n"
-                                                " 3 pour Finir le round, Attribuer les Points:\n"))
+                                                " 3 pour sauvegarder les donnée du tournois\n"
+                                                " 4 pour Finir le round, Attribuer les Points:\n"))
         return start_input
     
     def print_match(self, match_list, current_round):
@@ -76,6 +76,38 @@ class View:
             p2 = match[1][0]
             print(p1.first_name, p1.last_name, "    -   ", p2.first_name, p2.last_name, "\n" )
 
+    def tournament_end_menu_prompt(self,name, locale, tournament_begin_date, tournament_end_date):
+
+        format_begin_date = self.format_date(tournament_begin_date)
+        format_end_date = self.format_date(tournament_end_date)
+
+        print(self.title_prompt("Tournois : "+ name))
+        print( self.title_color("\n organisé 0 " + locale + "\n du " + format_begin_date +" au " + format_end_date + " :\n"))
+
+        start_input = input(self.question_color("\n 1 pour consulter le Classement Final\n"
+                                                " 2 pour afficher tout les Round du Tournois\n"
+                                                " 3 pour retourner au menu principale\n"))
+        return start_input
+    
+    def load_tournament_menu_prompt(self, tournament_list):
+         
+        print(self.title_prompt("Charger un Tournois"))
+        
+        print(self.question_color("\n0 pour retourner au menu principal"))
+        for tournament in tournament_list:
+            i = 1
+            print(self.question_color(f"{i} pour charger le tournois : {tournament.name} au tour {tournament.current_round}\n"))
+            i+=1
+
+        load_input = input(self.question_color('quelle tournois voulez vous charger ?\n'))
+
+        return load_input
+    
+    def format_date(self, date):
+        date_obj = datetime.strptime(date, "%d%m%Y")
+        date_formatted = date_obj.strftime("%d-%m-%Y")
+
+        return date_formatted
 
     def print_players_list_by_point(self, player_list):
         for player in player_list:
@@ -90,6 +122,9 @@ class View:
 
             print("        n°", i, player.first_name, "  |   ", player.last_name, "  |   point :", player.point)
             print("   _____________________________________________________\n")
+
+    def print_round(self, round_list):
+        pass
 
     def print_players_sorted(self, player_list):
         pass

@@ -24,3 +24,12 @@ class Player:
             self.point += 0.5
         elif victoire == "3":
             pass
+        
+    def save_player_data(self):
+        player_data = {
+                "first_name": self.first_name,
+                "last_name": self.last_name,
+                "birth_date": self.birth_date,
+                "point": self.point
+            }
+        return player_data
