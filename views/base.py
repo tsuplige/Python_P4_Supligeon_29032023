@@ -23,7 +23,6 @@ class View:
                                                 "2 pour consulter la liste de joueurs\n3 pour lancer le tournois\n4 Charger les Tournois enregistré : \n"))
         return start_input
        
-
     def add_players_to_tournament_list_prompt(self):
         prenom = input(self.exemple_color("tapez le prenom du joueur : "))
         while not prenom:
@@ -58,14 +57,16 @@ class View:
 
         return ask_to_continue
     
-    def tournament_menu_prompt(self, current_round):
+    def tournament_menu_prompt(self, current_round, tournament_name):
 
-        print( self.title_color("Round "+ current_round + " Menu :"))
+        print( self.title_color("Tournois : "+tournament_name +"\nRound "+ current_round + " Menu :"))
 
         start_input = input(self.question_color("\n 1 pour afficher les matchs du Round \n"
                                                 " 2 pour consulter le Classement Actuelle\n"
                                                 " 3 pour sauvegarder les donnée du tournois\n"
-                                                " 4 pour Finir le round, Attribuer les Points:\n"))
+                                                " 4 pour Finir le round, Attribuer les Points:\n"
+                                                " 5 pour retourner au menu principal\n"
+                                                ))
         return start_input
     
     def print_match(self, match_list, current_round):
@@ -82,7 +83,7 @@ class View:
         format_end_date = self.format_date(tournament_end_date)
 
         print(self.title_prompt("Tournois : "+ name))
-        print( self.title_color("\n organisé 0 " + locale + "\n du " + format_begin_date +" au " + format_end_date + " :\n"))
+        print( self.title_color("\n organisé à " + locale + "\n du " + format_begin_date +" au " + format_end_date + " :\n"))
 
         start_input = input(self.question_color("\n 1 pour consulter le Classement Final\n"
                                                 " 2 pour afficher tout les Round du Tournois\n"
@@ -94,10 +95,10 @@ class View:
         print(self.title_prompt("Charger un Tournois"))
         
         print(self.question_color("\n0 pour retourner au menu principal"))
+        i = 1
         for tournament in tournament_list:
-            i = 1
-            print(self.question_color(f"{i} pour charger le tournois : {tournament.name} au tour {tournament.current_round}\n"))
-            i+=1
+            print(self.question_color(f"{i} pour charger le tournois : {tournament.name} au tour {tournament.current_round}"))
+            i = i+1
 
         load_input = input(self.question_color('quelle tournois voulez vous charger ?\n'))
 
@@ -113,7 +114,7 @@ class View:
         for player in player_list:
             player.last_name = player.last_name.lower().title()
 
-        self.title_prompt('Classement1 des joueurs')
+        self.title_prompt('Classement des joueurs')
         
         sorted_players = sorted(player_list, key=lambda x: x.point, reverse=True)
         i = 0

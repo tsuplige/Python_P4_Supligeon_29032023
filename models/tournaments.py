@@ -1,5 +1,6 @@
 import random
 from models.round import Round
+from models.player import Player
 
 class Tournament:
     """
@@ -27,7 +28,7 @@ class Tournament:
             player_list = []
         self.player_list = player_list
         self.number_of_round = number_of_round
-        self.current_round = 0
+        self.current_round = 1
         self.is_not_finish = True
         self.round_list = []
 
@@ -80,8 +81,14 @@ class Tournament:
         scoreP1 = 0
         scoreP2 = 0
         players = self.player_list
-        for i in range(0, len(players), 2):
-                    pairs.append(([players[i], scoreP1],[players[i+1], scoreP2]))
+        if len(players)%2 == 0:
+            for i in range(0, len(players), 2):
+                pairs.append(([players[i], scoreP1],[players[i+1], scoreP2]))
+        else:
+            for i in range(0, len(players)- 1, 2):
+                pairs.append(([players[i], scoreP1],[players[i+1], scoreP2]))
+            pairs.append(([players[len(players) - 1], scoreP1], [Player("joueur","vide","10012001"), scoreP2]))
+            
 
         return pairs
     
@@ -115,7 +122,7 @@ class Tournament:
         for round in round_data:
             match_list = []
             for match in round["match_list"]:
-                match_list.append(([match["joueur_1"], match["score_J1"]],[match["joueur_2"], match["score_J2"]]))
+                match_list.append(([Player(match["joueur_1"]['first_name'],match["joueur_1"]['last_name'],match["joueur_1"]['birth_date'],match["joueur_1"]['point']), match["score_J1"]],[Player(match["joueur_2"]['first_name'],match["joueur_2"]['last_name'],match["joueur_2"]['birth_date'],match["joueur_2"]['point']), match["score_J2"]]))
 
             self.round_list.append(Round( round["current_round"], match_list, round["round_begin_date"], round["round_end_date"]))
     

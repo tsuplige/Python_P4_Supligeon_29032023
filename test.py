@@ -1,7 +1,5 @@
-tabu = [1,2,3,4]
+from models.player import Player
 
-for i in range(len(tabu)-1):
-    if tabu[i] == 3:
-        del tabu[i]
+tuple = ([Player("toto","lerigolo", "10022010"), 0],[Player("sairina","rigolote","10011997", 0)])
 
-print(tabu)
+print(tuple[0][0].last_name)

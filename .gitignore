@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 models/__pycache__
 views/__pycache__
+controllers/__pycache__
 
 # C extensions
 *.so

@@ -42,17 +42,17 @@ class Round:
     def save_round_data(self):
     
         matchs_datas = []
-
-        for match in self.match_list:
-            print(match[0][0].last_name)
-            matchs_datas.append({
-                 
-                "joueur_1" : match[0][0].save_player_data(),
-                "score_J1" : match[0][1],
-                "joueur_2" : match[1][0].save_player_data(),
-                "score_J2" : match[1][1]
-                                
-                                })
+        if self.match_list:
+            for match in self.match_list:
+                print(match)
+                matchs_datas.append({
+                    
+                    "joueur_1" : match[0][0].save_player_data(),
+                    "score_J1" : match[0][1],
+                    "joueur_2" : match[1][0].save_player_data(),
+                    "score_J2" : match[1][1]
+                                    
+                                    })
             
         round_data = {
             "round_name" : self.round_name,
