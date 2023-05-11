@@ -34,7 +34,9 @@ class Controllers:
                 for data in json.loads(datas):
                     self.players.append(
                         Player(
-                            data["last_name"], data["first_name"], data["birth_date"]
+                            data["last_name"],
+                            data["first_name"],
+                            data["birth_date"]
                         )
                     )
         if os.path.exists("data/tournament_data.json"):
@@ -83,7 +85,10 @@ class Controllers:
             self.get_players()
         elif menu_input == "2":
             ask_to_continue = self.view.show_players_list_prompt(self.players)
-            self.main_menu()
+            if ask_to_continue:
+                self.main_menu()
+            else:
+                self.main_menu()
         elif menu_input == "3":
             self.start_new_tournament()
         elif menu_input == "4":
@@ -98,7 +103,7 @@ class Controllers:
 
             self.next_round = True
 
-            while self.next_round == True:
+            while self.next_round is True:
                 self.tournament_menu(
                     str(tournament.current_round), match_list, tournament
                 )
@@ -128,8 +133,6 @@ class Controllers:
             tournament_end_date,
             description,
         ) = self.view.start_tournament_prompt()
-
-        index_of_new_tournament = len(self.tournament_list)
 
         new_tournament = Tournament(
             name,
@@ -194,7 +197,8 @@ class Controllers:
 
 
         """
-        menu_input = self.view.tournament_menu_prompt(current_round, tournament.name)
+        menu_input = self.view.tournament_menu_prompt(current_round,
+                                                      tournament.name)
 
         while not menu_input:
             menu_input = self.view.tournament_menu_prompt(
@@ -205,7 +209,10 @@ class Controllers:
             self.tournament_menu(current_round, match_list, tournament)
         elif menu_input == "2":
             ask_to_continue = self.view.print_players_list_by_point(self.players)
-            self.tournament_menu(current_round, match_list, tournament)
+            if ask_to_continue:
+                self.tournament_menu(current_round, match_list, tournament)
+            else:
+                self.tournament_menu(current_round, match_list, tournament)
         elif menu_input == "3":
             self.save_tournament_data(tournament)
             self.tournament_menu(current_round, match_list, tournament)
@@ -221,14 +228,15 @@ class Controllers:
 
         Méthode get_players
 
-        permets d'ajouter des joueurs a la liste de joueurs et appelle la methode save_player_data()
-        pour ajouter les donnée créé dans le fichier de saugdarde data/players.json
+        permets d'ajouter des joueurs a la liste de joueurs et appelle la
+        methode save_player_data() pour ajouter les donnée créé dans
+        le fichier de saugdarde data/players.json
 
         """
 
-        if self.more_player == False:
+        if self.more_player is False:
             self.more_player = True
-        while self.more_player == True:
+        while self.more_player is True:
             (
                 nom,
                 prenom,
@@ -239,11 +247,13 @@ class Controllers:
             self.players.append(Player(nom, prenom, date_de_naissance))
 
             """
-            permets de mettre fin à la boucle si l'utilisateurs a finis d'ajouter des joueurs
+            permets de mettre fin à la boucle si l'utilisateurs a finis
+            d'ajouter des joueurs
             """
             ask_to_continue = input(
                 self.view.question_color(
-                    "voulez vous ajouter d'autre joueur ? \n o pour oui\n n pour non\n"
+                    "voulez vous ajouter d'autre joueur ?"
+                    " \n o pour oui\n n pour non\n"
                 )
             )
             if ask_to_continue == "o" or ask_to_continue == "O":
@@ -306,6 +316,7 @@ class Controllers:
                 description,
                 round_list,
             )
+            return ask_to_continue
 
     def save_player_data(self):
         data = []
@@ -318,12 +329,6 @@ class Controllers:
 
     def save_tournament_data(self, new_tournament):
         tournament_data = []
-        # not_same = True
-        # for i in range(len(self.tournament_list)-1):
-        #     if self.tournament_list[i].name == new_tournament.name and self.tournament_list[i].current_round == new_tournament.current_round:
-        #         not_same = False
-        #         print ("Suprimmé")
-        # if not_same:
         self.tournament_list.append(new_tournament)
 
         for tournament in self.tournament_list:
@@ -357,6 +362,3 @@ class Controllers:
                 tournament.description,
                 tournament.round_list,
             )
-
-    def load_data_from_json(self):
-        pass

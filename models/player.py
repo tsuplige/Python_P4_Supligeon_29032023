@@ -1,7 +1,7 @@
 class Player:
     """
     Class Players.
-    
+
      Attb:
         attribut_1 -- nom
         attribut_2 -- prenom
@@ -10,7 +10,11 @@ class Player:
         attribut_5 -- numero d'identifiant nationnal
 
     """
-    def __init__(self, last_name, first_name, birth_date,point = 0, nationnal_chess_id = '0000000'):
+
+    def __init__(
+        self, last_name, first_name, birth_date,
+        point=0, nationnal_chess_id="0000000"
+    ):
         self.last_name = last_name
         self.first_name = first_name
         self.birth_date = birth_date
@@ -27,17 +31,17 @@ class Player:
 
     def save_participant_data(self):
         participant_data = {
-                "first_name": self.first_name,
-                "last_name": self.last_name,
-                "birth_date": self.birth_date
-            }
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "birth_date": self.birth_date,
+        }
         return participant_data
 
     def save_player_data(self):
         player_data = {
-                "first_name": self.first_name,
-                "last_name": self.last_name,
-                "birth_date": self.birth_date,
-                "point": self.point
-            }
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "birth_date": self.birth_date,
+            "point": self.point,
+        }
         return player_data
