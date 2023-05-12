@@ -5,4 +5,4 @@ vue = View()
 
 test = Controllers(vue)
 
-test.main_menu()
+test.launch_app()

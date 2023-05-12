@@ -5,12 +5,6 @@ import json
 import os
 
 
-if os.path.exists("data") and os.path.isdir("data"):
-    print("Le dossier 'data' existe.")
-else:
-    os.makedirs("data")
-
-
 class Controllers:
     """
     class Controllers
@@ -28,48 +22,14 @@ class Controllers:
         self.view = view
         self.tournament_list = []
 
-        if os.path.exists("data/players.json"):
-            with open("data/players.json", "r") as f:
-                datas = f.read()
-                for data in json.loads(datas):
-                    self.players.append(
-                        Player(
-                            data["last_name"],
-                            data["first_name"],
-                            data["birth_date"]
-                        )
-                    )
-        if os.path.exists("data/tournament_data.json"):
-            with open("data/tournament_data.json", "r") as f:
-                datas = f.read()
-                if datas:
-                    for data in json.loads(datas):
-                        load_player_list = []
-                        for player in data["players_list"]:
-                            load_player_list.append(
-                                Player(
-                                    player["last_name"],
-                                    player["first_name"],
-                                    player["birth_date"],
-                                    player["point"],
-                                )
-                            )
-                        for player in load_player_list:
-                            print(player.last_name, player.point)
-                        load_tournament = Tournament(
-                            data["name"],
-                            data["locale"],
-                            data["tournament_begin_date"],
-                            data["tournament_end_date"],
-                            data["description"],
-                            load_player_list,
-                            data["number_of_round"],
-                        )
-                        load_tournament.current_round = data["current_round"]
-                        load_tournament.is_not_finish = data["is_not_finish"]
-                        load_tournament.load_round_data(data["round_list"])
-                        self.tournament_list.append(load_tournament)
-                        print(load_tournament.name)
+    def launch_app(self):
+        if os.path.exists("data") and os.path.isdir("data"):
+            pass
+        else:
+            os.makedirs("data")
+
+        self.convert_and_load_from_json()
+        self.main_menu
 
     def main_menu(self):
         """
@@ -194,7 +154,7 @@ class Controllers:
         """
         Methode : tournament_menu()
 
-
+        recupere le input de tournament_menu_prompt()
 
         """
         menu_input = self.view.tournament_menu_prompt(current_round,
@@ -208,7 +168,8 @@ class Controllers:
             self.view.print_match(match_list, current_round)
             self.tournament_menu(current_round, match_list, tournament)
         elif menu_input == "2":
-            ask_to_continue = self.view.print_players_list_by_point(self.players)
+            ask_to_continue = self.view.print_players_list_by_point(
+                self.players)
             if ask_to_continue:
                 self.tournament_menu(current_round, match_list, tournament)
             else:
@@ -283,7 +244,8 @@ class Controllers:
                 name, locale, tournament_begin_date, tournament_end_date
             )
         if menu_input == "1":
-            ask_to_continue = self.view.print_players_list_by_point(self.players)
+            ask_to_continue = self.view.print_players_list_by_point(
+                self.players)
             self.end_tournament_menu(
                 tournament,
                 name,
@@ -337,7 +299,8 @@ class Controllers:
             json.dump(tournament_data, f)
 
     def load_tournament_menu(self):
-        input_result = self.view.load_tournament_menu_prompt(self.tournament_list)
+        input_result = self.view.load_tournament_menu_prompt(
+            self.tournament_list)
 
         if int(input_result) == 0:
             self.main_menu()
@@ -362,3 +325,45 @@ class Controllers:
                 tournament.description,
                 tournament.round_list,
             )
+
+    def convert_and_load_from_json(self):
+        if os.path.exists("data/players.json"):
+            with open("data/players.json", "r") as f:
+                datas = f.read()
+                for data in json.loads(datas):
+                    self.players.append(
+                        Player(
+                            data["last_name"],
+                            data["first_name"],
+                            data["birth_date"]
+                        )
+                    )
+
+        if os.path.exists("data/tournament_data.json"):
+            with open("data/tournament_data.json", "r") as f:
+                datas = f.read()
+                if datas:
+                    for data in json.loads(datas):
+                        load_player_list = []
+                        for player in data["players_list"]:
+                            load_player_list.append(
+                                Player(
+                                    player["last_name"],
+                                    player["first_name"],
+                                    player["birth_date"],
+                                    player["point"],
+                                )
+                            )
+                        load_tournament = Tournament(
+                            data["name"],
+                            data["locale"],
+                            data["tournament_begin_date"],
+                            data["tournament_end_date"],
+                            data["description"],
+                            load_player_list,
+                            data["number_of_round"],
+                        )
+                        load_tournament.current_round = data["current_round"]
+                        load_tournament.is_not_finish = data["is_not_finish"]
+                        load_tournament.load_round_data(data["round_list"])
+                        self.tournament_list.append(load_tournament)

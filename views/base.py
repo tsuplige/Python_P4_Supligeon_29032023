@@ -175,7 +175,9 @@ class View:
 
         self.title_prompt("Classement des joueurs")
 
-        sorted_players = sorted(player_list, key=lambda x: x.point, reverse=True)
+        sorted_players = sorted(player_list,
+                                key=lambda x: x.point,
+                                reverse=True)
         i = 0
         for player in sorted_players:
             i += 1
@@ -211,8 +213,10 @@ class View:
                 "tapez la date du debut du tournois (au format jjmmaaaa) : \n"
             )
         )
-        while not tournament_begin_date:
-            print(self.error_color("champs vide\n"))
+
+        while not self.is_valid_date(tournament_begin_date):
+            print(self.error_color("champs vide ou "
+                                   "format de date non respecté\n"))
             tournament_begin_date = input(
                 self.exemple_color(
                     "tapez la date du debut du tournois"
@@ -224,11 +228,13 @@ class View:
                 "tapez la date de fin du tournois (au format jjmmaaaa) : \n"
             )
         )
-        while not tournament_end_date:
-            print(self.error_color("champs vide\n"))
+        while not self.is_valid_date(tournament_end_date):
+            print(self.error_color("champs vide ou "
+                                   "format de date non respecté\n"))
             tournament_end_date = input(
                 self.exemple_color(
-                    "tapez la date de fin du tournois (au format jjmmaaaa) : \n"
+                    "tapez la date de fin du tournois "
+                    "(au format jjmmaaaa) : \n"
                 )
             )
         description = input(self.exemple_color("tapez la decription : \n"))
@@ -236,7 +242,8 @@ class View:
             print(self.error_color("champs vide\n"))
             description = input(self.exemple_color("tapez la decription : \n"))
 
-        return name, locale, tournament_begin_date, tournament_end_date, description
+        return (name, locale, tournament_begin_date,
+                tournament_end_date, description)
 
     def ask_for_result_prompt(
         self, p1_first_name, p1_last_name, p2_first_name, p2_last_name
@@ -250,7 +257,8 @@ class View:
         result = input(
             self.exemple_color(
                 f"1 si {p1_first_name} {p1_last_name} à gagner,\n"
-                "2 si {p2_first_name} {p2_last_name} à gagner,\n3 si il y a eu egalité : \n"
+                f"2 si {p2_first_name} {p2_last_name} à gagner,\n"
+                "3 si il y a eu egalité : \n"
             )
         )
 
@@ -276,3 +284,20 @@ class View:
 
     def error_color(self, error):
         return self.color_red + error + self.color_reset
+
+    def is_valid_date(self, input_string):
+        if len(input_string) != 8:
+            return False
+        if not input_string.isdigit():
+            return False
+
+        day = int(input_string[:2])
+        month = int(input_string[2:4])
+        year = int(input_string[4:8])
+
+        try:
+            datetime.date(year, month, day)
+        except ValueError:
+            return False
+
+        return True
