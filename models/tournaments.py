@@ -49,12 +49,14 @@ class Tournament:
 
         """
 
+        match_list = []
+
         if self.current_round == 1:
             random.shuffle(self.player_list)
+            match_list = self.generate_first_pairs()
         else:
             self.sort_by_point()
-
-        match_list = self.generate_pair()
+            match_list = self.generate_pair()
 
         self.round_list.append(Round(self.current_round, match_list))
 
@@ -63,11 +65,6 @@ class Tournament:
     def end_round(self, match_list_update):
         self.round_list[self.current_round - 1].match_list = match_list_update
         self.round_list[self.current_round - 1].add_end_round_date()
-
-    # def print_match_list(self, match_list):
-
-    #      for match in match_list:
-    #         print
 
     def sort_by_point(self):
         """
@@ -80,11 +77,10 @@ class Tournament:
             self.player_list, key=lambda player: player.point, reverse=True
         )
 
-    def generate_pair(self):
+    def generate_first_pairs(self):
         """
 
-        genere les paire
-
+        genere les tuples
         """
 
         pairs = []
@@ -93,12 +89,10 @@ class Tournament:
         players = self.player_list
         if len(players) % 2 == 0:
             for i in range(0, len(players), 2):
-                pairs.append(([players[i], scoreP1],
-                              [players[i + 1], scoreP2]))
+                pairs.append(([players[i], scoreP1], [players[i + 1], scoreP2]))
         else:
             for i in range(0, len(players) - 1, 2):
-                pairs.append(([players[i], scoreP1],
-                              [players[i + 1], scoreP2]))
+                pairs.append(([players[i], scoreP1], [players[i + 1], scoreP2]))
             pairs.append(
                 (
                     [players[len(players) - 1], scoreP1],
@@ -107,6 +101,100 @@ class Tournament:
             )
 
         return pairs
+
+    def generate_pair(self):
+        """
+
+        genere les tuples
+        """
+
+        pairs = []
+        scoreP1 = 0
+        scoreP2 = 0
+        players = self.player_list
+
+        for i, player in enumerate(players):
+            a = 0
+            while True:
+                try:
+                    player2 = players[i + a]
+
+                except IndexError:
+                    a = 0
+                    player2 = players[i + a]
+                    break
+
+                if (
+                    self.have_already_play(player, player2)
+                    and self.is_not_in_match_list(player, pairs)
+                    and self.is_not_in_match_list(player2, pairs)
+                ):
+                    pairs.append(
+                        (
+                            [player, scoreP1],
+                            [player2, scoreP2],
+                        )
+                    )
+                    break
+                elif i == len(players) - 1 and self.is_not_in_match_list(player, pairs):
+                    for i, player in enumerate(players):
+                        if self.is_not_in_match_list(player, pairs):
+                            player2 = player
+                    pairs.append(
+                        (
+                            [player, scoreP1],
+                            [player2, scoreP2],
+                        )
+                    )
+                    break
+                else:
+                    a += 1
+                    continue
+        return pairs
+
+    def is_not_in_match_list(self, player, lmatch_list):
+        for match in lmatch_list:
+            if (
+                player.first_name == match[0][0].first_name
+                and player.last_name == match[0][0].last_name
+            ):
+                return False
+            elif (
+                player.first_name == match[1][0].first_name
+                and player.last_name == match[1][0].last_name
+            ):
+                return False
+        return True
+
+    def have_already_play(self, player, player2):
+        all_match_list = []
+
+        for round in self.round_list:
+            for match in round.match_list:
+                all_match_list.append(match)
+        for match in all_match_list:
+            if (
+                player.first_name == match[0][0].first_name
+                and player.last_name == match[0][0].last_name
+            ) and (
+                player2.first_name == match[1][0].first_name
+                and player2.last_name == match[1][0].last_name
+            ):
+                return False
+            elif (
+                player.first_name == match[1][0].first_name
+                and player.last_name == match[1][0].last_name
+            ) and (
+                player2.first_name == match[0][0].first_name
+                and player2.last_name == match[0][0].last_name
+            ):
+                return False
+            elif (
+                player.first_name == player2.first_name
+                and player.last_name == player2.last_name
+            ):
+                return False
+        return True
 
     def save_tournament_data(self):
         player_data = []
@@ -134,6 +222,10 @@ class Tournament:
         return tournament_data
 
     def load_round_data(self, round_data):
+        """
+        convertie les donnée JSON en objet Round
+        et en tuple contenant des objet Player
+        """
         for round in round_data:
             match_list = []
             for match in round["match_list"]:

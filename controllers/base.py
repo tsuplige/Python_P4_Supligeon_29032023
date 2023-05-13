@@ -3,6 +3,7 @@ from models.tournaments import Tournament
 from typing import List
 import json
 import os
+import sys
 
 
 class Controllers:
@@ -24,12 +25,10 @@ class Controllers:
 
     def launch_app(self):
         if os.path.exists("data") and os.path.isdir("data"):
-            pass
+            self.convert_and_load_from_json()
         else:
             os.makedirs("data")
-
-        self.convert_and_load_from_json()
-        self.main_menu
+        self.main_menu()
 
     def main_menu(self):
         """
@@ -53,11 +52,13 @@ class Controllers:
             self.start_new_tournament()
         elif menu_input == "4":
             self.load_tournament_menu()
+        elif menu_input == "5":
+            sys.exit()
         else:
             self.main_menu()
 
     def manage_tournament(self, tournament):
-        while tournament.current_round < tournament.number_of_round:
+        while tournament.current_round <= tournament.number_of_round:
             self.view.title_prompt("Round " + str(tournament.current_round))
             match_list = tournament.start_round()
 
@@ -93,6 +94,9 @@ class Controllers:
             tournament_end_date,
             description,
         ) = self.view.start_tournament_prompt()
+
+        for player in self.players:
+            player.point = 0
 
         new_tournament = Tournament(
             name,
@@ -256,7 +260,7 @@ class Controllers:
                 round_list,
             )
         elif menu_input == "2":
-            self.view.print_round(round_list)
+            self.view.print_all_round(tournament.round_list)
             self.end_tournament_menu(
                 tournament,
                 name,

@@ -28,7 +28,8 @@ class View:
                 "que voulez vous faire ?\n1 pour inscrire des joueur \n"
                 "2 pour consulter la liste de joueurs\n"
                 "3 pour lancer le tournois\n"
-                "4 Charger les Tournois enregistré : \n"
+                "4 Charger les Tournois enregistré\n"
+                "5 Pour quitté l'application\n"
             )
         )
         return start_input
@@ -102,7 +103,7 @@ class View:
         return start_input
 
     def print_match(self, match_list, current_round):
-        print(self.title_color("\nMatch Round : " + current_round + "\n"))
+        print(self.title_color("\nMatch Round : " + str(current_round) + "\n"))
         for match in match_list:
             p1 = match[0][0]
             p2 = match[1][0]
@@ -114,6 +115,10 @@ class View:
                 p2.last_name,
                 "\n",
             )
+
+    def print_all_round(self, round_list):
+        for round in round_list:
+            self.print_match(round.match_list, round.current_round)
 
     def tournament_end_menu_prompt(
         self, name, locale, tournament_begin_date, tournament_end_date
@@ -152,7 +157,7 @@ class View:
             print(
                 self.question_color(
                     f"{i} pour charger le tournois : {tournament.name}"
-                    " au tour {tournament.current_round}"
+                    f" au tour {tournament.current_round}"
                 )
             )
             i = i + 1
@@ -192,9 +197,6 @@ class View:
                 player.point,
             )
             print("   _____________________________________________________\n")
-
-    def print_round(self, round_list):
-        pass
 
     def print_players_sorted(self, player_list):
         pass
@@ -251,7 +253,7 @@ class View:
         print(
             self.question_color(
                 f"\npour le match {p1_first_name} {p1_last_name} -"
-                " {p2_first_name} {p2_last_name}\n"
+                f" {p2_first_name} {p2_last_name}\n"
             )
         )
         result = input(
@@ -296,7 +298,7 @@ class View:
         year = int(input_string[4:8])
 
         try:
-            datetime.date(year, month, day)
+            datetime.date(datetime(year, month, day))
         except ValueError:
             return False
 
