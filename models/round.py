@@ -64,15 +64,3 @@ class Round:
             "round_end_date": self.round_end_date,
         }
         return round_data
-
-    # def which_player_start(self):
-    #      """
-
-    #      definit pour chaque match quel joueur commence
-
-    #      """
-
-    #     for match in self.match_list:
-
-
-#         chosen_player = random.choice(match)

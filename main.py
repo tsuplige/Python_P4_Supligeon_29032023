@@ -1,8 +1,14 @@
 from controllers.base import Controllers
 from views.base import View
 
-vue = View()
 
-test = Controllers(vue)
+def main():
+    vue = View()
 
-test.launch_app()
+    test = Controllers(vue)
+
+    test.launch_app()
+
+
+if __name__ == "__main__":
+    main()

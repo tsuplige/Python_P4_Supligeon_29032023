@@ -24,16 +24,18 @@ class Controllers:
         self.tournament_list = []
 
     def launch_app(self):
+        # verifie si /data existe et si non le créé
         if os.path.exists("data") and os.path.isdir("data"):
             self.convert_and_load_from_json()
         else:
             os.makedirs("data")
+        # lance l'app
         self.main_menu()
 
     def main_menu(self):
         """
 
-        Méthode main_menu
+        menu principal
 
 
         """
@@ -58,6 +60,11 @@ class Controllers:
             self.main_menu()
 
     def manage_tournament(self, tournament):
+        """
+        gestion d'un tournois
+        """
+
+        # tant qu'on n'as pas fais tout les Round
         while tournament.current_round <= tournament.number_of_round:
             self.view.title_prompt("Round " + str(tournament.current_round))
             match_list = tournament.start_round()
@@ -73,8 +80,10 @@ class Controllers:
                 tournament.player_list = self.players
 
             tournament.end_round(match_list)
+            # incremente current round pour passé au round suivant
             tournament.current_round += 1
         tournament.is_not_finish = False
+        # sauvegarde les donnée du tournois fini
         self.save_tournament_data(tournament)
         self.end_tournament_menu(
             tournament,
@@ -87,6 +96,9 @@ class Controllers:
         )
 
     def start_new_tournament(self):
+        """
+        instancie un objet Tournois et lance le tournois
+        """
         (
             name,
             locale,
@@ -109,6 +121,9 @@ class Controllers:
         self.manage_tournament(new_tournament)
 
     def add_point_for_match(self, match_list):
+        """
+        ajoute les point au joueur
+        """
         new_match_list = []
 
         for match in match_list:
@@ -190,13 +205,9 @@ class Controllers:
 
     def get_players(self):
         """
-
-        Méthode get_players
-
         permets d'ajouter des joueurs a la liste de joueurs et appelle la
         methode save_player_data() pour ajouter les donnée créé dans
         le fichier de saugdarde data/players.json
-
         """
 
         if self.more_player is False:
@@ -239,6 +250,9 @@ class Controllers:
         description,
         round_list,
     ):
+        """
+        menu de fin de tournois
+        """
         menu_input = self.view.tournament_end_menu_prompt(
             name, locale, tournament_begin_date, tournament_end_date
         )
@@ -285,6 +299,9 @@ class Controllers:
             return ask_to_continue
 
     def save_player_data(self):
+        """
+        converti les données Joueur et les sauvgarde dans un fichier Json
+        """
         data = []
 
         for player in self.players:
@@ -294,6 +311,9 @@ class Controllers:
             json.dump(data, f)
 
     def save_tournament_data(self, new_tournament):
+        """
+        convertie les données tournois et le sauvgarde dans le fichier Json
+        """
         tournament_data = []
         self.tournament_list.append(new_tournament)
 
@@ -317,6 +337,9 @@ class Controllers:
             self.load_tournament_menu
 
     def load_tounament(self, tournament):
+        """
+        lance un tournois sauvegardé
+        """
         if tournament.is_not_finish:
             self.manage_tournament(tournament)
         else:
@@ -331,6 +354,7 @@ class Controllers:
             )
 
     def convert_and_load_from_json(self):
+        "charge toute les donnée json"
         if os.path.exists("data/players.json"):
             with open("data/players.json", "r") as f:
                 datas = f.read()

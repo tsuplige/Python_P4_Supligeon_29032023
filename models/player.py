@@ -21,15 +21,25 @@ class Player:
         self.point = point
         self.nationnal_chess_id = nationnal_chess_id
 
-    def add_point(self, victoire):
-        if victoire == "1":
+    def add_point(self, result):
+        """
+        Ajout ou non un point
+
+        Args:
+        first -- self
+        second -- le resultat du match
+        """
+        if result == "1":
             self.point += 1
-        elif victoire == "2":
+        elif result == "2":
             self.point += 0.5
-        elif victoire == "3":
+        elif result == "3":
             pass
 
     def save_participant_data(self):
+        """
+        convertie les donnée du Player en donnée JSON
+        """
         participant_data = {
             "first_name": self.first_name,
             "last_name": self.last_name,
@@ -38,6 +48,9 @@ class Player:
         return participant_data
 
     def save_player_data(self):
+        """
+        convertie les donnée du Player (avec les points) en donnée JSON
+        """
         player_data = {
             "first_name": self.first_name,
             "last_name": self.last_name,

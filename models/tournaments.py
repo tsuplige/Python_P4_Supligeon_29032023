@@ -44,33 +44,34 @@ class Tournament:
 
     def start_round(self):
         """
-        melange la list de joueur au premier tour, et pour les
-        autre tour tri les jueur par point la listinstancie un objet Round
+        lance un round
 
         """
 
         match_list = []
-
+        # melange la list de joueur au premier tour
         if self.current_round == 1:
             random.shuffle(self.player_list)
+            # genere les tuples du premier round
             match_list = self.generate_first_pairs()
         else:
+            # tri les jueur par point
             self.sort_by_point()
             match_list = self.generate_pair()
-
+        # instancie un objet Round
         self.round_list.append(Round(self.current_round, match_list))
 
         return match_list
 
     def end_round(self, match_list_update):
+        # met a jour les resultat dans match dans match_list
         self.round_list[self.current_round - 1].match_list = match_list_update
+        # ajoute la date de fin de round
         self.round_list[self.current_round - 1].add_end_round_date()
 
     def sort_by_point(self):
         """
-
         tri les joueurs par point
-
         """
 
         self.player_list = sorted(
@@ -79,16 +80,18 @@ class Tournament:
 
     def generate_first_pairs(self):
         """
-
-        genere les tuples
+        genere les tuples du premier round
         """
 
         pairs = []
         scoreP1 = 0
         scoreP2 = 0
         players = self.player_list
+
+        # verifie si il y a un nombre paire de joueurs
         if len(players) % 2 == 0:
             for i in range(0, len(players), 2):
+                # cree les tuples
                 pairs.append(([players[i], scoreP1], [players[i + 1], scoreP2]))
         else:
             for i in range(0, len(players) - 1, 2):
@@ -104,7 +107,6 @@ class Tournament:
 
     def generate_pair(self):
         """
-
         genere les tuples
         """
 
@@ -120,10 +122,12 @@ class Tournament:
                     player2 = players[i + a]
 
                 except IndexError:
+                    # si hors de la list on force la combinaison de joueur
                     a = 0
                     player2 = players[i + a]
                     break
 
+                # verifie si les joueurs on joué ensemble et/ou si il sont dans dans match
                 if (
                     self.have_already_play(player, player2)
                     and self.is_not_in_match_list(player, pairs)
@@ -136,6 +140,7 @@ class Tournament:
                         )
                     )
                     break
+                # si il reste deux joueur forcé la combinaison
                 elif i == len(players) - 1 and self.is_not_in_match_list(player, pairs):
                     for i, player in enumerate(players):
                         if self.is_not_in_match_list(player, pairs):
@@ -153,6 +158,9 @@ class Tournament:
         return pairs
 
     def is_not_in_match_list(self, player, lmatch_list):
+        """
+        vérifie si un joueur et dans la list de match
+        """
         for match in lmatch_list:
             if (
                 player.first_name == match[0][0].first_name
@@ -167,6 +175,10 @@ class Tournament:
         return True
 
     def have_already_play(self, player, player2):
+        """
+        vérifie si deux joueur on deja joué l'un contre l'autre
+        et si les joueurs ne sont pas la meme personne
+        """
         all_match_list = []
 
         for round in self.round_list:
@@ -197,6 +209,9 @@ class Tournament:
         return True
 
     def save_tournament_data(self):
+        """
+        convertie les donnée du tournois et donnée JSON
+        """
         player_data = []
         rounds_data = []
 
