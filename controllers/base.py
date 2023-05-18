@@ -18,6 +18,7 @@ class Controllers:
 
     def __init__(self, view):
         self.players: List[Player] = []
+        self.participant: List[Player] = []
         self.more_player = True
         self.next_round = True
         self.view = view
@@ -44,8 +45,9 @@ class Controllers:
 
         if menu_input == "1":
             self.get_players()
+            self.main_menu()
         elif menu_input == "2":
-            ask_to_continue = self.view.show_players_list_prompt(self.players)
+            ask_to_continue = self.view.show_players_list_prompt(self.participant)
             if ask_to_continue:
                 self.main_menu()
             else:
@@ -76,8 +78,7 @@ class Controllers:
                     str(tournament.current_round), match_list, tournament
                 )
                 self.view.title_prompt("Resultat du Round")
-                match_list = self.add_point_for_match(match_list)
-                tournament.player_list = self.players
+                match_list = self.add_point_for_match(match_list, tournament)
 
             tournament.end_round(match_list)
             # incremente current round pour passé au round suivant
@@ -107,8 +108,7 @@ class Controllers:
             description,
         ) = self.view.start_tournament_prompt()
 
-        for player in self.players:
-            player.point = 0
+        self.add_player_to_tournament(name)
 
         new_tournament = Tournament(
             name,
@@ -118,9 +118,55 @@ class Controllers:
             description,
             self.players,
         )
+
+        self.players = []
+
         self.manage_tournament(new_tournament)
 
-    def add_point_for_match(self, match_list):
+    def add_player_to_tournament(self, tournament_name):
+        while True:
+            result = self.view.add_player_to_tournament_promp(
+                self.participant, tournament_name
+            )
+
+            try:
+                int_result = int(result)
+            except ValueError:
+                self.add_player_to_tournament(tournament_name)
+
+            if int_result == 0:
+                if len(self.players) < 4:
+                    print(
+                        self.view.error_color(
+                            "il n'y a pas assez de joueurs, veuillez en ajouter"
+                        )
+                    )
+                    continue
+                elif len(self.players) % 2 != 0:
+                    print(
+                        self.view.error_color(
+                            "nombres de joueur impaire, veuillez en ajouter"
+                        )
+                    )
+                    continue
+                break
+            elif int_result == 1:
+                print(self.players)
+                self.view.show_players_list_prompt(self.players)
+                continue
+            elif int_result == 2:
+                self.get_players()
+                self.players.append(self.participant[len(self.participant) - 1])
+                continue
+            else:
+                try:
+                    self.players.append(self.participant[int_result - 3])
+                    continue
+                except IndexError:
+                    print(self.view.error_color("aucun joueur a cette index"))
+                    continue
+
+    def add_point_for_match(self, match_list, tournament):
         """
         ajoute les point au joueur
         """
@@ -133,7 +179,14 @@ class Controllers:
             result = self.view.ask_for_result_prompt(
                 p1.first_name, p1.last_name, p2.first_name, p2.last_name
             )
-            for player in self.players:
+
+            if result != "1" or result != "2" or result != "3":
+                print(self.view.error_color("\n" + result + " n'est pas pris en compte, veuillez tapez 1 pour"
+                                            " une victoire, 2 pour une défaite ou 3 pour une égalité"))
+                result = self.view.ask_for_result_prompt(
+                    p1.first_name, p1.last_name, p2.first_name, p2.last_name
+                )
+            for player in tournament.player_list:
                 if (
                     player.first_name == p1.first_name
                     and player.last_name == p1.last_name
@@ -144,7 +197,7 @@ class Controllers:
                         match[1][1] = 0
                         new_match_list.append(match)
                     elif result == "2":
-                        for player2 in self.players:
+                        for player2 in tournament.player_list:
                             if (
                                 player2.first_name == p2.first_name
                                 and player2.last_name == p2.last_name
@@ -156,7 +209,7 @@ class Controllers:
                                 break
                     elif result == "3":
                         player.add_point("2")
-                        for player2 in self.players:
+                        for player2 in tournament.player_list:
                             if (
                                 player2.first_name == p2.first_name
                                 and player2.last_name == p2.last_name
@@ -176,8 +229,7 @@ class Controllers:
         recupere le input de tournament_menu_prompt()
 
         """
-        menu_input = self.view.tournament_menu_prompt(current_round,
-                                                      tournament.name)
+        menu_input = self.view.tournament_menu_prompt(current_round, tournament.name)
 
         while not menu_input:
             menu_input = self.view.tournament_menu_prompt(
@@ -188,7 +240,8 @@ class Controllers:
             self.tournament_menu(current_round, match_list, tournament)
         elif menu_input == "2":
             ask_to_continue = self.view.print_players_list_by_point(
-                self.players)
+                tournament.player_list
+            )
             if ask_to_continue:
                 self.tournament_menu(current_round, match_list, tournament)
             else:
@@ -220,7 +273,7 @@ class Controllers:
             ) = self.view.add_players_to_tournament_list_prompt()
             if not (nom, prenom, date_de_naissance):
                 return
-            self.players.append(Player(nom, prenom, date_de_naissance))
+            self.participant.append(Player(nom, prenom, date_de_naissance))
 
             """
             permets de mettre fin à la boucle si l'utilisateurs a finis
@@ -238,7 +291,9 @@ class Controllers:
                 self.more_player = False
 
         self.save_player_data()
-        self.main_menu()
+
+    def get_players_in_tournament(self):
+        pass
 
     def end_tournament_menu(
         self,
@@ -263,7 +318,8 @@ class Controllers:
             )
         if menu_input == "1":
             ask_to_continue = self.view.print_players_list_by_point(
-                self.players)
+                tournament.player_list
+            )
             self.end_tournament_menu(
                 tournament,
                 name,
@@ -304,7 +360,7 @@ class Controllers:
         """
         data = []
 
-        for player in self.players:
+        for player in self.participant:
             data.append(player.save_participant_data())
 
         with open("data/players.json", "w") as f:
@@ -323,18 +379,22 @@ class Controllers:
             json.dump(tournament_data, f)
 
     def load_tournament_menu(self):
-        input_result = self.view.load_tournament_menu_prompt(
-            self.tournament_list)
+        input_result = self.view.load_tournament_menu_prompt(self.tournament_list)
 
-        if int(input_result) == 0:
+        try:
+            int_input_result = int(input_result)
+        except ValueError:
+            self.load_tournament_menu()
+
+        if int_input_result == 0:
             self.main_menu()
-        elif int(input_result) > 0 and (
-            int(input_result) < len(self.tournament_list)
-            or int(input_result) == len(self.tournament_list)
+        elif int_input_result > 0 and (
+            int_input_result < len(self.tournament_list)
+            or int_input_result == len(self.tournament_list)
         ):
-            self.load_tounament(self.tournament_list[int(input_result) - 1])
+            self.load_tounament(self.tournament_list[int_input_result - 1])
         else:
-            self.load_tournament_menu
+            self.load_tournament_menu()
 
     def load_tounament(self, tournament):
         """
@@ -359,11 +419,9 @@ class Controllers:
             with open("data/players.json", "r") as f:
                 datas = f.read()
                 for data in json.loads(datas):
-                    self.players.append(
+                    self.participant.append(
                         Player(
-                            data["last_name"],
-                            data["first_name"],
-                            data["birth_date"]
+                            data["last_name"], data["first_name"], data["birth_date"]
                         )
                     )
 

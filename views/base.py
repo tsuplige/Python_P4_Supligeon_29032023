@@ -16,7 +16,7 @@ class View:
     def main_menu_prompt(self):
         print(
             self.exemple_color(
-                "\n\n Inscrire des joueur, "
+                "\n\n Ajouter des joueur dans la base de donnée, "
                 "consulter la liste des joueurs inscrit au tournois,"
                 " Lancer le Tournois, consulter"
                 " la liste des precedent tournois\n\n"
@@ -25,7 +25,7 @@ class View:
 
         start_input = input(
             self.question_color(
-                "que voulez vous faire ?\n1 pour inscrire des joueur \n"
+                "que voulez vous faire ?\n1 Ajouter des joueur dans la base de donnée \n"
                 "2 pour consulter la liste de joueurs\n"
                 "3 pour lancer le tournois\n"
                 "4 Charger les Tournois enregistré\n"
@@ -44,14 +44,14 @@ class View:
             print(self.error_color("champs vide"))
             nom = input(self.exemple_color("tapez le nom du joueur : "))
         date_de_naissance = input(
-            self.exemple_color("tapez la date de naissance "
-                               "(au format jjmmaaaa) : ")
+            self.exemple_color("tapez la date de naissance " "(au format jjmmaaaa) : ")
         )
         while not date_de_naissance:
             print(self.error_color("champs vide"))
             date_de_naissance = input(
-                self.exemple_color("tapez la date de naissance"
-                                   " (au format jjmmaaaa) : ")
+                self.exemple_color(
+                    "tapez la date de naissance" " (au format jjmmaaaa) : "
+                )
             )
         return nom, prenom, date_de_naissance
 
@@ -86,8 +86,7 @@ class View:
     def tournament_menu_prompt(self, current_round, tournament_name):
         print(
             self.title_color(
-                "Tournois : " + tournament_name + "\nRound "
-                + current_round + " Menu :"
+                "Tournois : " + tournament_name + "\nRound " + current_round + " Menu :"
             )
         )
 
@@ -163,8 +162,53 @@ class View:
             i = i + 1
 
         load_input = input(
-            self.question_color("quelle tournois voulez vous charger ?\n")
+            self.question_color("quelle joueur voulez vous ajouter au tournois ?\n")
         )
+
+        return load_input
+
+    def add_player_to_tournament_promp(self, participant_list, name):
+        print(self.title_prompt(f"ajouter des joueur au tournois : {name}"))
+
+        print(self.question_color("\n0 pour lancer le tournois"))
+        print(
+            self.question_color("\n1 pour voir la liste de joueur inscrit au tournois")
+        )
+        print(self.question_color("\n2 pour inscrire un nouveau joueur"))
+        i = 3
+
+        if len(participant_list) % 2 == 0:
+            for ii in range(0, len(participant_list), 2):
+                # cree les tuples
+                print(
+                    self.exemple_color(
+                        f"\n\033[33m{i}\033[0m pour ajouter : {participant_list[ii].first_name}"
+                        f" {participant_list[ii].last_name}     |"
+                        f"      \n\033{i + 1}\033[0m pour ajouter : {participant_list[ii + 1].first_name}"
+                        f" {participant_list[ii + 1].last_name}"
+                    )
+                )
+                i += 2
+        else:
+            for ii in range(0, len(participant_list) - 1, 2):
+                # cree les tuples
+                print(
+                    self.exemple_color(
+                        f"\n\033[33m{i}\033[0m pour ajouter : {participant_list[ii].first_name} "
+                        f"{participant_list[ii].last_name}      |"
+                        f"      \033[33m{i + 1}\033[0m pour ajouter : {participant_list[ii + 1].first_name} "
+                        f"{participant_list[ii + 1].last_name}"
+                    )
+                )
+                i += 2
+            print(
+                self.exemple_color(
+                    f"\n\033[33m{i}\033[0m pour ajouter : {participant_list[len(participant_list)-1].first_name} "
+                    f"{participant_list[len(participant_list)-1].last_name}"
+                )
+            )
+
+        load_input = input(self.question_color("\nque souhaitez vous faire ?\n"))
 
         return load_input
 
@@ -180,9 +224,7 @@ class View:
 
         self.title_prompt("Classement des joueurs")
 
-        sorted_players = sorted(player_list,
-                                key=lambda x: x.point,
-                                reverse=True)
+        sorted_players = sorted(player_list, key=lambda x: x.point, reverse=True)
         i = 0
         for player in sorted_players:
             i += 1
@@ -217,12 +259,10 @@ class View:
         )
 
         while not self.is_valid_date(tournament_begin_date):
-            print(self.error_color("champs vide ou "
-                                   "format de date non respecté\n"))
+            print(self.error_color("champs vide ou " "format de date non respecté\n"))
             tournament_begin_date = input(
                 self.exemple_color(
-                    "tapez la date du debut du tournois"
-                    " (au format jjmmaaaa) : \n"
+                    "tapez la date du debut du tournois" " (au format jjmmaaaa) : \n"
                 )
             )
         tournament_end_date = input(
@@ -231,12 +271,10 @@ class View:
             )
         )
         while not self.is_valid_date(tournament_end_date):
-            print(self.error_color("champs vide ou "
-                                   "format de date non respecté\n"))
+            print(self.error_color("champs vide ou " "format de date non respecté\n"))
             tournament_end_date = input(
                 self.exemple_color(
-                    "tapez la date de fin du tournois "
-                    "(au format jjmmaaaa) : \n"
+                    "tapez la date de fin du tournois " "(au format jjmmaaaa) : \n"
                 )
             )
         description = input(self.exemple_color("tapez la decription : \n"))
@@ -244,8 +282,7 @@ class View:
             print(self.error_color("champs vide\n"))
             description = input(self.exemple_color("tapez la decription : \n"))
 
-        return (name, locale, tournament_begin_date,
-                tournament_end_date, description)
+        return (name, locale, tournament_begin_date, tournament_end_date, description)
 
     def ask_for_result_prompt(
         self, p1_first_name, p1_last_name, p2_first_name, p2_last_name
@@ -269,9 +306,7 @@ class View:
     def title_prompt(self, title_content):
         print(
             self.title_color(
-                "\n______________________"
-                f"{title_content}"
-                "____________________ \n"
+                "\n______________________" f"{title_content}" "____________________ \n"
             )
         )
 

@@ -46,7 +46,6 @@ class Round:
         matchs_datas = []
         if self.match_list:
             for match in self.match_list:
-                print(match)
                 matchs_datas.append(
                     {
                         "joueur_1": match[0][0].save_player_data(),
