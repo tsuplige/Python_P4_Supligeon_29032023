@@ -151,16 +151,19 @@ class Controllers:
                     continue
                 break
             elif int_result == 1:
-                print(self.players)
                 self.view.show_players_list_prompt(self.players)
                 continue
             elif int_result == 2:
                 self.get_players()
                 self.players.append(self.participant[len(self.participant) - 1])
+                
                 continue
             else:
                 try:
-                    self.players.append(self.participant[int_result - 3])
+                    if self.is_already_in_the_playerlist(self.participant[int_result - 3]):
+                        self.players.append(self.participant[int_result - 3])
+                    else:
+                        print(self.view.error_color('\n     joueur deja présent dans la liste du tournois'))
                     continue
                 except IndexError:
                     print(self.view.error_color("aucun joueur a cette index"))
@@ -181,8 +184,14 @@ class Controllers:
             )
 
             if result != "1" or result != "2" or result != "3":
-                print(self.view.error_color("\n" + result + " n'est pas pris en compte, veuillez tapez 1 pour"
-                                            " une victoire, 2 pour une défaite ou 3 pour une égalité"))
+                print(
+                    self.view.error_color(
+                        "\n"
+                        + result
+                        + " n'est pas pris en compte, veuillez tapez 1 pour"
+                        " une victoire, 2 pour une défaite ou 3 pour une égalité"
+                    )
+                )
                 result = self.view.ask_for_result_prompt(
                     p1.first_name, p1.last_name, p2.first_name, p2.last_name
                 )
@@ -221,6 +230,15 @@ class Controllers:
                                 break
                     break
         return new_match_list
+
+    def is_already_in_the_playerlist(self, myplayer):
+        for player in self.players:
+            if (
+                player.first_name == myplayer.first_name
+                and player.last_name == myplayer.last_name
+            ):
+                return False
+        return True
 
     def tournament_menu(self, current_round, match_list, tournament):
         """
