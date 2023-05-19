@@ -156,7 +156,7 @@ class Controllers:
             elif int_result == 2:
                 self.get_players()
                 self.players.append(self.participant[len(self.participant) - 1])
-                
+
                 continue
             else:
                 try:
