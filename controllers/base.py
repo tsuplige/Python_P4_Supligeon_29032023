@@ -136,18 +136,14 @@ class Controllers:
 
             if int_result == 0:
                 if len(self.players) < 4:
-                    print(
-                        self.view.error_color(
+                    self.view.error_message(
                             "il n'y a pas assez de joueurs, veuillez en ajouter"
                         )
-                    )
                     continue
                 elif len(self.players) % 2 != 0:
-                    print(
-                        self.view.error_color(
+                    self.view.error_message(
                             "nombres de joueur impaire, veuillez en ajouter"
                         )
-                    )
                     continue
                 break
             elif int_result == 1:
@@ -163,10 +159,10 @@ class Controllers:
                     if self.is_already_in_the_playerlist(self.participant[int_result - 3]):
                         self.players.append(self.participant[int_result - 3])
                     else:
-                        print(self.view.error_color('\n     joueur deja présent dans la liste du tournois'))
+                        self.view.error_message('\n     joueur deja présent dans la liste du tournois')
                     continue
                 except IndexError:
-                    print(self.view.error_color("aucun joueur a cette index"))
+                    self.view.error_message("aucun joueur a cette index")
                     continue
 
     def add_point_for_match(self, match_list, tournament):
@@ -184,14 +180,12 @@ class Controllers:
             )
 
             if result != "1" or result != "2" or result != "3":
-                print(
-                    self.view.error_color(
+                self.view.error_message(
                         "\n"
                         + result
                         + " n'est pas pris en compte, veuillez tapez 1 pour"
                         " une victoire, 2 pour une défaite ou 3 pour une égalité"
                     )
-                )
                 result = self.view.ask_for_result_prompt(
                     p1.first_name, p1.last_name, p2.first_name, p2.last_name
                 )

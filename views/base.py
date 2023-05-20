@@ -37,17 +37,17 @@ class View:
     def add_players_to_tournament_list_prompt(self):
         prenom = input(self.exemple_color("tapez le prenom du joueur : "))
         while not prenom:
-            print(self.error_color("champs vide"))
+            self.error_message("champs vide")
             prenom = input(self.exemple_color("tapez le prenom du joueur : "))
         nom = input(self.exemple_color("tapez le nom du joueur : "))
         while not nom:
-            print(self.error_color("champs vide"))
+            self.error_message("champs vide")
             nom = input(self.exemple_color("tapez le nom du joueur : "))
         date_de_naissance = input(
             self.exemple_color("tapez la date de naissance " "(au format jjmmaaaa) : ")
         )
         while not date_de_naissance:
-            print(self.error_color("champs vide"))
+            self.error_message("champs vide")
             date_de_naissance = input(
                 self.exemple_color(
                     "tapez la date de naissance" " (au format jjmmaaaa) : "
@@ -179,19 +179,17 @@ class View:
 
         if len(participant_list) % 2 == 0:
             for ii in range(0, len(participant_list), 2):
-                # cree les tuples
                 print(
                     self.exemple_color(
                         f"\n\033[33m{i}\033[0m pour ajouter : {participant_list[ii].first_name}"
-                        f" {participant_list[ii].last_name}     |"
-                        f"      \n\033{i + 1}\033[0m pour ajouter : {participant_list[ii + 1].first_name}"
+                        f"{participant_list[ii].last_name}     |"
+                        f"      \033[33m{i + 1}\033[0m pour ajouter : {participant_list[ii + 1].first_name}"
                         f" {participant_list[ii + 1].last_name}"
                     )
                 )
                 i += 2
         else:
             for ii in range(0, len(participant_list) - 1, 2):
-                # cree les tuples
                 print(
                     self.exemple_color(
                         f"\n\033[33m{i}\033[0m pour ajouter : {participant_list[ii].first_name} "
@@ -246,11 +244,11 @@ class View:
     def start_tournament_prompt(self):
         name = input(self.exemple_color("tapez le nom du tournois : \n"))
         while not name:
-            print(self.error_color("champs vide\n"))
+            self.error_message("champs vide\n")
             name = input(self.exemple_color("tapez le nom du tournois : \n"))
         locale = input(self.exemple_color("tapez le lieu : \n"))
         while not locale:
-            print(self.error_color("champs vide\n"))
+            self.error_message("champs vide\n")
             locale = input(self.exemple_color("tapez le lieu : \n"))
         tournament_begin_date = input(
             self.exemple_color(
@@ -259,7 +257,7 @@ class View:
         )
 
         while not self.is_valid_date(tournament_begin_date):
-            print(self.error_color("champs vide ou " "format de date non respecté\n"))
+            self.error_message("champs vide ou " "format de date non respecté\n")
             tournament_begin_date = input(
                 self.exemple_color(
                     "tapez la date du debut du tournois" " (au format jjmmaaaa) : \n"
@@ -271,7 +269,7 @@ class View:
             )
         )
         while not self.is_valid_date(tournament_end_date):
-            print(self.error_color("champs vide ou " "format de date non respecté\n"))
+            self.error_message("champs vide ou " "format de date non respecté\n")
             tournament_end_date = input(
                 self.exemple_color(
                     "tapez la date de fin du tournois " "(au format jjmmaaaa) : \n"
@@ -279,7 +277,7 @@ class View:
             )
         description = input(self.exemple_color("tapez la decription : \n"))
         while not description:
-            print(self.error_color("champs vide\n"))
+            self.error_message("champs vide\n")
             description = input(self.exemple_color("tapez la decription : \n"))
 
         return (name, locale, tournament_begin_date, tournament_end_date, description)
@@ -319,8 +317,8 @@ class View:
     def title_color(self, title_color):
         return self.color_magenta + title_color + self.color_reset
 
-    def error_color(self, error):
-        return self.color_red + error + self.color_reset
+    def error_message(self, error):
+        print(self.color_red + error + self.color_reset)
 
     def is_valid_date(self, input_string):
         if len(input_string) != 8:
