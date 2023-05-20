@@ -179,7 +179,7 @@ class Controllers:
                 p1.first_name, p1.last_name, p2.first_name, p2.last_name
             )
 
-            if result != "1" or result != "2" or result != "3":
+            if result != "1" and result != "2" and result != "3":
                 self.view.error_message(
                         "\n"
                         + result

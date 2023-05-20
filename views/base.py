@@ -1,4 +1,6 @@
 from datetime import datetime
+from colorama import init
+init()
 
 
 class View:
@@ -16,20 +18,20 @@ class View:
     def main_menu_prompt(self):
         print(
             self.exemple_color(
-                "\n\n Ajouter des joueur dans la base de donnée, "
-                "consulter la liste des joueurs inscrit au tournois,"
-                " Lancer le Tournois, consulter"
-                " la liste des precedent tournois\n\n"
+                "\n\n Ajouter des joueurs dans la base de données, "
+                "consulter la liste des joueurs inscrit aux tournois,"
+                " Lancer le tournoi, consulter"
+                " la liste des precedents tournois\n\n"
             )
         )
 
         start_input = input(
             self.question_color(
-                "que voulez vous faire ?\n1 Ajouter des joueur dans la base de donnée \n"
+                "que voulez-vous faire ?\n1 ajouter des joueurs dans la base de données \n"
                 "2 pour consulter la liste de joueurs\n"
-                "3 pour lancer le tournois\n"
-                "4 Charger les Tournois enregistré\n"
-                "5 Pour quitté l'application\n"
+                "3 pour lancer un tournoi\n"
+                "4 Charger les Tournois enregistrés\n"
+                "5 Pour quitter l'application\n"
             )
         )
         return start_input
@@ -37,17 +39,17 @@ class View:
     def add_players_to_tournament_list_prompt(self):
         prenom = input(self.exemple_color("tapez le prenom du joueur : "))
         while not prenom:
-            self.error_message("champs vide")
+            self.error_message("champ vide")
             prenom = input(self.exemple_color("tapez le prenom du joueur : "))
         nom = input(self.exemple_color("tapez le nom du joueur : "))
         while not nom:
-            self.error_message("champs vide")
+            self.error_message("champ vide")
             nom = input(self.exemple_color("tapez le nom du joueur : "))
         date_de_naissance = input(
             self.exemple_color("tapez la date de naissance " "(au format jjmmaaaa) : ")
         )
         while not date_de_naissance:
-            self.error_message("champs vide")
+            self.error_message("champ vide")
             date_de_naissance = input(
                 self.exemple_color(
                     "tapez la date de naissance" " (au format jjmmaaaa) : "
@@ -78,7 +80,7 @@ class View:
 
         ask_to_continue = input(
             "\n\nPour revenir au menu principal "
-            "appuyer sur n'importe quelle touche\n"
+            "appuyez sur n'importe quelle touche\n"
         )
 
         return ask_to_continue
@@ -93,8 +95,8 @@ class View:
         start_input = input(
             self.question_color(
                 "\n 1 pour afficher les matchs du Round \n"
-                " 2 pour consulter le Classement Actuelle\n"
-                " 3 pour sauvegarder les donnée du tournois\n"
+                " 2 pour consulter le Classement Actuel\n"
+                " 3 pour sauvegarder les données du tournois\n"
                 " 4 pour Finir le round, Attribuer les Points:\n"
                 " 5 pour retourner au menu principal\n"
             )
@@ -102,7 +104,7 @@ class View:
         return start_input
 
     def print_match(self, match_list, current_round):
-        print(self.title_color("\nMatch Round : " + str(current_round) + "\n"))
+        print(self.title_color("\nMatchs Round : " + str(current_round) + "\n"))
         for match in match_list:
             p1 = match[0][0]
             p2 = match[1][0]
@@ -125,7 +127,7 @@ class View:
         format_begin_date = self.format_date(tournament_begin_date)
         format_end_date = self.format_date(tournament_end_date)
 
-        print(self.title_prompt("Tournois : " + name))
+        print(self.title_prompt("Tournoi : " + name))
         print(
             self.title_color(
                 "\n organisé à "
@@ -141,8 +143,8 @@ class View:
         start_input = input(
             self.question_color(
                 "\n 1 pour consulter le Classement Final\n"
-                " 2 pour afficher tout les Round du Tournois\n"
-                " 3 pour retourner au menu principale\n"
+                " 2 pour afficher tout les Rounds du Tournoi\n"
+                " 3 pour retourner au menu principal\n"
             )
         )
         return start_input
@@ -168,11 +170,11 @@ class View:
         return load_input
 
     def add_player_to_tournament_promp(self, participant_list, name):
-        print(self.title_prompt(f"ajouter des joueur au tournois : {name}"))
+        print(self.title_prompt(f"ajouter des joueurs au tournois : {name}"))
 
-        print(self.question_color("\n0 pour lancer le tournois"))
+        print(self.question_color("\n0 pour lancer le tournoi"))
         print(
-            self.question_color("\n1 pour voir la liste de joueur inscrit au tournois")
+            self.question_color("\n1 pour voir la liste des joueurs inscrit au tournoi")
         )
         print(self.question_color("\n2 pour inscrire un nouveau joueur"))
         i = 3
@@ -238,38 +240,35 @@ class View:
             )
             print("   _____________________________________________________\n")
 
-    def print_players_sorted(self, player_list):
-        pass
-
     def start_tournament_prompt(self):
-        name = input(self.exemple_color("tapez le nom du tournois : \n"))
+        name = input(self.exemple_color("tapez le nom du tournoi : \n"))
         while not name:
             self.error_message("champs vide\n")
-            name = input(self.exemple_color("tapez le nom du tournois : \n"))
+            name = input(self.exemple_color("tapez le nom du tournoi : \n"))
         locale = input(self.exemple_color("tapez le lieu : \n"))
         while not locale:
             self.error_message("champs vide\n")
             locale = input(self.exemple_color("tapez le lieu : \n"))
         tournament_begin_date = input(
             self.exemple_color(
-                "tapez la date du debut du tournois (au format jjmmaaaa) : \n"
+                "tapez la date du debut du tournoi (au format jjmmaaaa) : \n"
             )
         )
 
         while not self.is_valid_date(tournament_begin_date):
-            self.error_message("champs vide ou " "format de date non respecté\n")
+            self.error_message("champ vide ou " "format de date non respecté\n")
             tournament_begin_date = input(
                 self.exemple_color(
-                    "tapez la date du debut du tournois" " (au format jjmmaaaa) : \n"
+                    "tapez la date du debut du tournoi" " (au format jjmmaaaa) : \n"
                 )
             )
         tournament_end_date = input(
             self.exemple_color(
-                "tapez la date de fin du tournois (au format jjmmaaaa) : \n"
+                "tapez la date de fin du tournoi (au format jjmmaaaa) : \n"
             )
         )
         while not self.is_valid_date(tournament_end_date):
-            self.error_message("champs vide ou " "format de date non respecté\n")
+            self.error_message("champ vide ou " "format de date non respecté\n")
             tournament_end_date = input(
                 self.exemple_color(
                     "tapez la date de fin du tournois " "(au format jjmmaaaa) : \n"
@@ -277,7 +276,7 @@ class View:
             )
         description = input(self.exemple_color("tapez la decription : \n"))
         while not description:
-            self.error_message("champs vide\n")
+            self.error_message("champ vide\n")
             description = input(self.exemple_color("tapez la decription : \n"))
 
         return (name, locale, tournament_begin_date, tournament_end_date, description)
@@ -293,9 +292,9 @@ class View:
         )
         result = input(
             self.exemple_color(
-                f"1 si {p1_first_name} {p1_last_name} à gagner,\n"
-                f"2 si {p2_first_name} {p2_last_name} à gagner,\n"
-                "3 si il y a eu egalité : \n"
+                f"1 si {p1_first_name} {p1_last_name} à gagné,\n"
+                f"2 si {p2_first_name} {p2_last_name} à gagné,\n"
+                "3 si il y a eu égalité : \n"
             )
         )
 
